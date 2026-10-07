@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+
 """
 # Zoologist front
 """
@@ -21,35 +22,23 @@ flipper_length = st.number_input('flipper length (in mm)')
 body_mass = st.number_input('body_mass (in g)')
 
 sex = st.text_input('sex','Male or Female')
-"""
-## Once we have these, let's call our API in order to retrieve a prediction
-
-See ? No need to load a `model.joblib` file in this app, we do not even need to know anything about Data Science in order to retrieve a prediction...
-
-🤔 How could we call our API ? Of course... The `requests` package 💡
-
-What are the steps to follow in order to call an API ?
 
 
+url = st.secrets['API_URL']
+#'http://localhost:8001/predict'
 
-1. Which url will you use? Save it in a variable so you can easily change it later...
+if st.button("Predict"):
+    parameter = {'island':island,
+                 'bill_length_mm': bill_length,
+                 'bill_depth_mm': bill_depth,
+                 'flipper_length_mm':flipper_length,
+                 'body_mass_g': body_mass,
+                 'sex': sex}
 
-2. Let's build a dictionary containing the parameters for our API...
+    response = requests.get(url, params=parameter)
 
-3. Let's call our API using the `requests` package...
+    result = response.json()
 
-4. Let's retrieve the prediction from the **JSON** returned by the API...
+    #prediction = result['prediction']
 
-## Finally, we can display the prediction to the user
-"""
-url = 'http://localhost:8001/predict'
-
-parameter = {'isalnd':island, 'bill_length': bill_length, 'bill_depth': bill_depth, 'flipper_length':flipper_length, 'body_mass': body_mass, 'sex': sex}
-
-response = requests.get(url, params=parameter)
-
-result = response.json()
-
-#prediction = result['prediction']
-
-print(result)
+    st.write('Prediction:', result)
